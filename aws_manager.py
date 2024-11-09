@@ -89,8 +89,10 @@ class AwsManger:
             response = self.ec2.run_instances(
                 ImageId=ami_id,
                 InstanceType="t2.micro",
+                IamInstanceProfile={"Name": "ec2-ssm-role"},
                 MaxCount=1,
                 MinCount=1,
+                SecurityGroups=["HTCondor"]
             )
             instance_id = response["Instances"][0]["InstanceId"]
             print(
