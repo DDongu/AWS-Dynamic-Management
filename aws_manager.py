@@ -20,9 +20,15 @@ class AwsManger:
                             instance["InstanceType"],
                             instance["State"]["Name"],
                             instance["Monitoring"]["State"],
-                            # instance["Tags"][0]["Value"],
-                        )
+                        ),
+                        end="",
                     )
+
+                    if "Tags" in instance:
+                        print(f", [Name] {instance["Tags"][0]["Value"]}")
+                    else:
+                        print(", [Name] None")
+
         except Exception as e:
             print(f"Error: {e}")
             pass
