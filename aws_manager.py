@@ -1,6 +1,10 @@
+import time
+
+
 class AwsManger:
-    def __init__(self, ec2):
+    def __init__(self, ec2, ssm):
         self.ec2 = ec2
+        self.ssm = ssm
 
     def list_instances(self):
         # 인스턴스 목록을 확인하는 함수
@@ -77,7 +81,10 @@ class AwsManger:
         # 특정 이미지의 인스턴스를 생성하는 함수
         try:
             response = self.ec2.run_instances(
-                ImageId=ami_id, InstanceType="t2.micro", MaxCount=1, MinCount=1
+                ImageId=ami_id,
+                InstanceType="t2.micro",
+                MaxCount=1,
+                MinCount=1,
             )
             instance_id = response["Instances"][0]["InstanceId"]
             print(
@@ -106,6 +113,28 @@ class AwsManger:
                         image["ImageId"], image["Name"], image["OwnerId"]
                     )
                 )
+        except Exception as e:
+            print(f"Error: {e}")
+            pass
+
+    def condor_status(self, instance_id):
+        # condor_status 명령어를 실행해주는 함수
+        try:
+            print("Getting condor status ....")
+            response = self.ssm.send_command(
+                InstanceIds=[instance_id],
+                DocumentName="AWS-RunShellScript",
+                Parameters={"commands": ["condor_status"]},
+            )
+            time.sleep(1)
+            command_id = response["Command"]["CommandId"]
+            output = self.ssm.get_command_invocation(
+                CommandId=command_id,
+                InstanceId=instance_id,
+            )
+            print(f"{'='*47} CONDOR STATUS {'='*47}")
+            print(output["StandardOutputContent"])
+            print(f"{'='*109}")
         except Exception as e:
             print(f"Error: {e}")
             pass

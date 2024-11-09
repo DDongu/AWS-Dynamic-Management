@@ -2,7 +2,8 @@ import boto3
 from aws_manager import AwsManger
 
 ec2 = boto3.client("ec2")
-AwsManger = AwsManger(ec2)
+ssm = boto3.client("ssm")
+AwsManger = AwsManger(ec2, ssm)
 
 
 def menu():
@@ -16,7 +17,7 @@ def menu():
         print("  3. start instance               4. available regions      ")
         print("  5. stop instance                6. create instance        ")
         print("  7. reboot instance              8. list images            ")
-        print("                                 99. quit                   ")
+        print("  9. condor status               99. quit                   ")
         print("------------------------------------------------------------")
 
         number = input("Enter an integer: ")
@@ -44,6 +45,10 @@ def menu():
                 AwsManger.reboot_instace(instance_id)
         elif number == "8":
             AwsManger.list_images()
+        elif number == "9":
+            instance_id = input("Enter instance id: ")
+            if instance_id:
+                AwsManger.condor_status(instance_id)
         elif number == "99":
             print("bye!")
             break
