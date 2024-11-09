@@ -23,11 +23,11 @@ class AwsManger:
                         ),
                         end="",
                     )
-
-                    if "Tags" in instance:
-                        print(f", [Name] {instance["Tags"][0]["Value"]}")
-                    else:
-                        print(", [Name] None")
+                    print(
+                        f", [Name] {instance["Tags"][0]["Value"]}"
+                        if "Tags" in instance
+                        else ", [Name] None"
+                    )
 
         except Exception as e:
             print(f"Error: {e}")
