@@ -3,6 +3,7 @@
 AWS 동적자원관리 프로그램 (2024.11.09)
 
 # Setting
+참고: [AWS boto3 Quickstart 가이드](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html)
 
 ### 1. 필요 모듈설치
 
