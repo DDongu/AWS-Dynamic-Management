@@ -20,10 +20,10 @@
 }
 
 .status-text pre {
-    word-wrap: break-word;  /* 긴 단어를 줄바꿈 */
-    word-break: break-word; /* 긴 단어가 넘치지 않게 줄바꿈 */
-    white-space: pre-wrap;   /* 공백 및 줄바꿈을 유지하며, 텍스트가 영역을 넘치면 자동으로 줄바꿈 */
-    overflow-wrap: break-word; /* 텍스트가 넘칠 때 줄바꿈 */
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
     width: fit-content;
     margin: auto;
     text-align: center;

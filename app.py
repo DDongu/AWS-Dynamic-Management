@@ -60,24 +60,6 @@ def reboot_instance():
     return redirect(url_for("instance"))
 
 
-# @app.route("/instance_action", methods=["POST"])
-# def instance_action():
-#     action = request.form.get("action")
-#     instance_ids = request.form.getlist("instance_ids")
-
-#     messages = []
-#     for instance_id in instance_ids:
-#         if action == "start":
-#             message = aws_manager.start_instance(instance_id)
-#         elif action == "stop":
-#             message = aws_manager.stop_instance(instance_id)
-#         elif action == "reboot":
-#             message = aws_manager.reboot_instance(instance_id)
-#         messages.append(message)
-#     flash(message)
-#     return redirect(url_for("instance"))
-
-
 @app.route("/create_instance", methods=["POST"])
 def create_instance():
     ami_id = request.form["ami_id"]
