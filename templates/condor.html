@@ -12,57 +12,59 @@
 </head>
 <body>
   <div class="container">
-    <div class="menu" onclick="openSidebar()">☰</div>
 
-    <div class="sidebar" id="sidebar">
-      <div class="menu-icon" onclick="openSidebar()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-        </svg>
-      </div>
-      <div class="list">
-        <a href="/instance">Instance</a>
-        <a href="/condor">Condor</a>
-      </div>
-    </div>
-  
+    {% include 'sidebar.html' %}
     
     <div class="content">
       <div>
         <h1><a href="/condor">Condor Status</a></h1>
         <div class="status-box">
-          <pre>{{ status }}</pre>
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <div class="status-text">
+                <div><pre>{{ '='*44 }} {{ messages[0]['instance_id'] }} {{ '='*44 }}</pre></div>
+                <div><pre>{{ messages[0]['status'] }}</pre></div>
+                <div><pre>{{ '='*109 }}</pre></div>
+              </div>
+            {% else %}
+              <pre>Click the button to get the status of the condor instance.</pre>
+            {% endif %}
+          {% endwith %}
         </div>
         <div>
           <form action="{{ url_for('condor_status') }}" method="POST" class="create-form">
             <div class="radio-list">
-              <h3>Instance List</h3>
-              <table>
-                <thead>
-                  <tr>
-                      <th class="radio">Instance</th>
-                      <th>Instance ID</th>
-                      <th>Name</th>
-                      <th>Type</th>
-                      <th>State</th>
-                      <th>Monitoring State</th>
-                  </tr>
-                </thead>
-                  <tbody>
-                    {% for instance in instances %}
+              <div class="list-header">
+                <h5>Instance List</h5>
+              </div>
+              <div>
+                <table>
+                  <thead>
                     <tr>
-                      <td class="radio">
-                        <input type="radio" name="instance_id" value="{{ instance.id }}" required>
-                      </td>
-                      <td>{{ instance.id }}</td>
-                      <td>{{ instance.name }}</td>
-                      <td>{{ instance.type }}</td>
-                      <td>{{ instance.state }}</td>
-                      <td>{{ instance.monitoringState }}</td>
+                        <th class="radio">Instance</th>
+                        <th>Name</th>
+                        <th>Instance ID</th>
+                        <th>Type</th>
+                        <th>State</th>
+                        <th>Monitoring State</th>
                     </tr>
-                    {% endfor %}
-                  </tbody>
-              </table>
+                  </thead>
+                    <tbody>
+                      {% for instance in instances %}
+                      <tr>
+                        <td class="radio">
+                          <input type="radio" name="instance_id" value="{{ instance.id }}" required>
+                        </td>
+                        <td>{{ instance.name }}</td>
+                        <td>{{ instance.id }}</td>
+                        <td>{{ instance.type }}</td>
+                        <td>{{ instance.state }}</td>
+                        <td>{{ instance.monitoringState }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+              </div>
             </div>
             <button type="submit" class="btn create">Get Condor Status</button>
           </form>
@@ -81,9 +83,5 @@
       }
     });
   });
-    
-  function openSidebar() {
-    document.getElementById("sidebar").classList.toggle("active");
-  }
 </script>
 </html>

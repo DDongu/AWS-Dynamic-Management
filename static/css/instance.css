@@ -1,38 +1,10 @@
 /* Instance 박스 테이블 스타일 */
 .container-instance-list {
     min-height: 400px;
-}
-  
-table {
-    width: 100%;
-    border: 1px solid #cdcdcd;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-}
-  
-table th, table td {
-    padding: 12px 20px;
-    text-align: left;
-    font-size: 14px;
-}
-  
-table th {
-    background-color: #f2f2f2;
-}
-  
-table tr{
-    border-bottom: 1px solid #cdcdcd
-}
-  
-table tbody tr:hover {
-    background-color: #f0f0f0;
+    min-width: 1000px;
 }
   
 /* Instance 박스 버튼 스타일 */
-.list-header {
-    /* padding: 0 20px; */
-}
-
 .actions {
     display: flex;
     gap: 10px;
@@ -78,8 +50,6 @@ table tbody tr:hover {
   
 /* AMI 박스 테이블 스타일 */
 .radio-list .radio {
-    padding: 10px;
-    text-align: center;
     width: 50px;
 }
   
