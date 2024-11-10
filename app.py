@@ -26,7 +26,6 @@ def instance():
 @app.route("/condor")
 def condor():
     instances = aws_manager.list_instances()
-    # status = request.args.get("status")
     return render_template("condor.html", instances=instances)
 
 
