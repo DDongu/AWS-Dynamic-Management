@@ -1,0 +1,51 @@
+.menu {
+    width: 65px;
+    left: 0px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    text-align: center;
+    font-size: 30px;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 0 0 0;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px; /* 초기에는 숨김 */
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: 0.3s ease; /* 부드러운 슬라이드 효과 */
+    padding-top: 70px;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+.menu-icon {
+    font-size: 30px;
+    color: #fff;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    left: 8px;
+}
