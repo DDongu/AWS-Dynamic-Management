@@ -31,6 +31,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def list_available_zones(self):
+        # 사용 가능한 클라우드 Zone 확인하는 함수
         try:
             zones = []
             response = self.ec2.describe_availability_zones()
@@ -47,6 +48,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def list_available_regions(self):
+        # 사용 가능한 클라우드 Region 확인하는 함수
         try:
             regions = []
             response = self.ec2.describe_regions()
@@ -59,6 +61,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def start_instance(self, instance_id):
+        # 특정 인스턴스를 시작하는 함수
         try:
             self.ec2.start_instances(InstanceIds=[instance_id])
             return f"Successfully started instance {instance_id}"
@@ -66,6 +69,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def stop_instance(self, instance_id):
+        # 특정 인스턴스를 중지하는 함수
         try:
             self.ec2.stop_instances(InstanceIds=[instance_id])
             return f"Successfully stopped instance {instance_id}"
@@ -73,6 +77,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def create_instance(self, ami_id):
+        # 특정 이미지의 인스턴스를 생성하는 함수
         try:
             response = self.ec2.run_instances(
                 ImageId=ami_id,
@@ -90,6 +95,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def reboot_instance(self, instance_id):
+        # 특정 인스턴스를 재시작하는 함수
         try:
             self.ec2.reboot_instances(InstanceIds=[instance_id])
             return f"Successfully rebooted instance {instance_id}"
@@ -97,6 +103,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def list_images(self):
+        # 생성 가능한 이미지 목록을 확인하는 함수
         try:
             images = []
             response = self.ec2.describe_images(Owners=["self"])
@@ -113,6 +120,7 @@ class AwsManger:
             return f"Error: {e}"
 
     def condor_status(self, instance_id):
+        # condor_status 명령어를 실행해주는 함수
         try:
             response = self.ssm.send_command(
                 InstanceIds=[instance_id],
