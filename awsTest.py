@@ -22,38 +22,39 @@ def menu():
 
         number = input("Enter an integer: ")
         if number == "1":
-            AwsManger.list_instances()
+            result = AwsManger.list_instances()
         elif number == "2":
-            AwsManger.list_available_zones()
+            result = AwsManger.list_available_zones()
         elif number == "3":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                AwsManger.start_instance(instance_id)
+                result = AwsManger.start_instance(instance_id)
         elif number == "4":
-            AwsManger.list_available_regions()
+            result = AwsManger.list_available_regions()
         elif number == "5":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                AwsManger.stop_instance(instance_id)
+                result = AwsManger.stop_instance(instance_id)
         elif number == "6":
             ami_id = input("Enter ami id: ")
             if ami_id:
-                AwsManger.create_instance(ami_id)
+                result = AwsManger.create_instance(ami_id)
         elif number == "7":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                AwsManger.reboot_instace(instance_id)
+                result = AwsManger.reboot_instace(instance_id)
         elif number == "8":
-            AwsManger.list_images()
+            result = AwsManger.list_images()
         elif number == "9":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                AwsManger.condor_status(instance_id)
+                result = AwsManger.condor_status(instance_id)
         elif number == "99":
             print("bye!")
             break
         else:
             print("concentration!")
+        print(result)
 
 
 if __name__ == "__main__":
