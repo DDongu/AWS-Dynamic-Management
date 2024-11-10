@@ -29,7 +29,7 @@
           <div class="list-header">
             <h5>Instance List</h5>
           </div>
-          <div>
+          <div class="scrollable-table">
             <table>
                 <thead>
                     <tr>
@@ -44,38 +44,38 @@
                 <tbody>
                     {% for instance in instances %}
                     <tr>
-                        <td>{{ instance.name }}</td>
-                        <td>{{ instance.id }}</td>
-                        <td>{{ instance.type }}</td>
-                        <td>{{ instance.state }}</td>
-                        <td>{{ instance.monitoringState }}</td>
-                        <td>
-                            <div class="actions">
-                                <form action="{{ url_for('start_instance') }}" method="POST">
-                                    <input type="hidden" name="instance_id" value="{{ instance.id }}">
-                                    <button type="submit" class="btn start">Start</button>
-                                </form>
-                                <form action="{{ url_for('stop_instance') }}" method="POST">
-                                    <input type="hidden" name="instance_id" value="{{ instance.id }}">
-                                    <button type="submit" class="btn stop">Stop</button>
-                                </form>
-                                <form action="{{ url_for('reboot_instance') }}" method="POST">
-                                    <input type="hidden" name="instance_id" value="{{ instance.id }}">
-                                    <button type="submit" class="btn reboot">Reboot</button>
-                                </form>
-                            </div>
-                        </td>
+                      <td>{{ instance.name }}</td>
+                      <td>{{ instance.id }}</td>
+                      <td>{{ instance.type }}</td>
+                      <td>{{ instance.state }}</td>
+                      <td>{{ instance.monitoringState }}</td>
+                      <td>
+                        <div class="actions">
+                          <form action="{{ url_for('start_instance') }}" method="POST" onsubmit="return confirmAction('start');">
+                            <input type="hidden" name="instance_id" value="{{ instance.id }}">
+                            <button type="submit" class="btn start">Start</button>
+                          </form>
+                          <form action="{{ url_for('stop_instance') }}" method="POST" onsubmit="return confirmAction('stop');">
+                            <input type="hidden" name="instance_id" value="{{ instance.id }}">
+                            <button type="submit" class="btn stop">Stop</button>
+                          </form>
+                          <form action="{{ url_for('reboot_instance') }}" method="POST" onsubmit="return confirmAction('reboot');">
+                            <input type="hidden" name="instance_id" value="{{ instance.id }}">
+                            <button type="submit" class="btn reboot">Reboot</button>
+                          </form>
+                        </div>
+                      </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
           </div>
         </div>
-        <div class="container-ami-list radio-list">
+        <div class="container-ami-list">
           <div class="list-header">
             <h5>Create New Instance</h5>
           </div>
-          <div>
+          <div class="scrollable-table">
             <form action="{{ url_for('create_instance') }}" method="POST" class="create-form">
               <table>
                 <thead>
@@ -107,6 +107,23 @@
   </div>
 </body>
 <script>
+  function confirmAction(action) {
+    let message = '';
+    
+    switch(action) {
+      case 'start':
+        message = '인스턴스를 시작하시겠습니까?';
+        break;
+      case 'stop':
+        message = '인스턴스를 중지하시겠습니까?';
+        break;
+      case 'reboot':
+        message = '인스턴스를 재부팅하시겠습니까?';
+        break;
+    }
+    
+    return confirm(message);
+  }
   const rows = document.querySelectorAll('.container-ami-list tr');
   rows.forEach(row => {
     row.addEventListener('click', function() {

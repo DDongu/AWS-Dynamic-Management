@@ -1,7 +1,8 @@
 /* Instance 박스 테이블 스타일 */
 .container-instance-list {
-    min-height: 400px;
+    min-height: 450px;
     min-width: 1000px;
+    margin-bottom: 30px;
 }
   
 /* Instance 박스 버튼 스타일 */
@@ -49,11 +50,15 @@
 }
   
 /* AMI 박스 테이블 스타일 */
-.radio-list .radio {
+.container-ami-list {
+    min-height: 250px;
+}
+
+.container-ami-list .radio {
     width: 50px;
 }
   
-.radio-list .btn {
+.container-ami-list .btn {
     padding: 8px 13px;
     border: none;
     border-radius: 5px;
@@ -68,6 +73,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: 200px;
+    justify-content: space-between;
 }
   
 .create-form label {

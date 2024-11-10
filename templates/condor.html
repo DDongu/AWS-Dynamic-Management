@@ -18,13 +18,13 @@
     <div class="content">
       <div>
         <h1><a href="/condor">Condor Status</a></h1>
-        <div class="status-box">
+        <div class="status-box scrollable-table">
           {% with messages = get_flashed_messages() %}
             {% if messages %}
               <div class="status-text">
-                <div><pre>{{ '='*44 }} {{ messages[0]['instance_id'] }} {{ '='*44 }}</pre></div>
-                <div><pre>{{ messages[0]['status'] }}</pre></div>
-                <div><pre>{{ '='*109 }}</pre></div>
+                <pre>{{ '='*46 }} {{ messages[0]['instance_id'] }} {{ '='*46 }}</pre>
+                <pre>{{ messages[0]['status'] }}</pre>
+                <pre>{{ '='*114 }}</pre>
               </div>
             {% else %}
               <pre>Click the button to get the status of the condor instance.</pre>
@@ -33,11 +33,11 @@
         </div>
         <div>
           <form action="{{ url_for('condor_status') }}" method="POST" class="create-form">
-            <div class="radio-list">
+            <div class="container-instance-list">
               <div class="list-header">
                 <h5>Instance List</h5>
               </div>
-              <div>
+              <div class="scrollable-table" style="max-height: 250px; ">
                 <table>
                   <thead>
                     <tr>
@@ -74,7 +74,7 @@
   </div>
 </body>
 <script>
-  const rows = document.querySelectorAll('.radio-list tr');
+  const rows = document.querySelectorAll('.container-instance-list tr');
   rows.forEach(row => {
     row.addEventListener('click', function() {
       const radioButton = row.querySelector('input[type="radio"]');

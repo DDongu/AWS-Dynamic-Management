@@ -2,3 +2,14 @@
     width: 30px;
     padding: 0 25px !important;
 }
+
+.container-zone-list {
+    min-height: 250px;
+    min-width: 1000px;
+    margin-bottom: 30px;
+}
+
+.container-region-list {
+    min-height: 400px;
+    min-width: 1000px;
+}
