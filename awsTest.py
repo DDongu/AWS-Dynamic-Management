@@ -3,7 +3,8 @@ from aws_manager import AwsManger
 
 ec2 = boto3.client("ec2")
 ssm = boto3.client("ssm")
-AwsManger = AwsManger(ec2, ssm)
+cloudwatch = boto3.client("cloudwatch")
+AwsManger = AwsManger(ec2, ssm, cloudwatch)
 
 
 def menu():
@@ -42,13 +43,17 @@ def menu():
         elif number == "7":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                result = AwsManger.reboot_instace(instance_id)
+                result = AwsManger.reboot_instance(instance_id)
         elif number == "8":
             result = AwsManger.list_images()
         elif number == "9":
             instance_id = input("Enter instance id: ")
             if instance_id:
                 result = AwsManger.condor_status(instance_id)
+        elif number == "10":
+            instance_id = input("Enter instance id: ")
+            if instance_id:
+                result = AwsManger.get_metrics_statistics(instance_id)
         elif number == "99":
             print("bye!")
             break

@@ -1,10 +1,12 @@
 import time
+from datetime import datetime, timedelta
 
 
 class AwsManger:
-    def __init__(self, ec2, ssm):
+    def __init__(self, ec2, ssm, cloudwatch):
         self.ec2 = ec2
         self.ssm = ssm
+        self.cloudwatch = cloudwatch
 
     def list_instances(self):
         # 인스턴스 목록을 반환하는 함수
@@ -136,3 +138,37 @@ class AwsManger:
             return output["StandardOutputContent"]
         except Exception as e:
             return f"Error: {e}"
+
+    def get_metrics_statistics(self, instance_id):
+        # 인스턴스 metric 데이터를 가져오는 함수
+        end_time = datetime.utcnow()
+        start_time = end_time - timedelta(weeks=1)
+
+        metrics = [
+            {"MetricName": "CPUUtilization", "Statistics": ["Average", "Maximum"]},
+            {"MetricName": "NetworkIn", "Statistics": ["Average", "Maximum"]},
+            {"MetricName": "NetworkOut", "Statistics": ["Average", "Maximum"]},
+        ]
+
+        period = 86400  # 하루(86400초)로 설정
+
+        result = []
+        for metric in metrics:
+            response = self.cloudwatch.get_metric_statistics(
+                Namespace="AWS/EC2",
+                MetricName=metric["MetricName"],
+                Dimensions=[
+                    {
+                        "Name": "InstanceId",
+                        "Value": instance_id,
+                    },
+                ],
+                StartTime=start_time,
+                EndTime=end_time,
+                Period=period,
+                Statistics=metric["Statistics"],
+            )
+
+            result.append(response)
+
+        return result
