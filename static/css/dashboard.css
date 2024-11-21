@@ -1,0 +1,29 @@
+#Graph {
+    /* width: 800;
+    height: 400; */
+}
+.chart-container {
+    width: 800px;
+    margin: 20px auto;
+}
+canvas {
+    position: relative;
+    border: 1px solid #ddd;
+    padding-right: 20px;
+    right: 10px;
+}
+.legend {
+    text-align: center;
+    margin-top: 10px;
+}
+.legend span {
+    display: inline-block;
+    margin: 0 10px;
+}
+.legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 3px;
+    margin-right: 5px;
+    vertical-align: middle;
+}   

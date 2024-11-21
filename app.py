@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import boto3
 import secrets
 from aws_manager import AwsManger
 
 ec2 = boto3.client("ec2")
 ssm = boto3.client("ssm")
-aws_manager = AwsManger(ec2, ssm)
+cloudwatch = boto3.client("cloudwatch")
+aws_manager = AwsManger(ec2, ssm, cloudwatch)
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(24)
@@ -34,6 +35,12 @@ def list_available_zones():
     zones = aws_manager.list_available_zones()
     regions = aws_manager.list_available_regions()
     return render_template("zones.html", zones=zones, regions=regions)
+
+
+@app.route("/dashboard")
+def dashboard():
+    instances = aws_manager.list_instances()
+    return render_template("dashboard.html", instances=instances)
 
 
 @app.route("/start_instance", methods=["POST"])
@@ -80,6 +87,30 @@ def condor_status():
     status = aws_manager.condor_status(instance_id)
     flash({"status": status, "instance_id": instance_id})
     return redirect(url_for("condor"))
+
+
+@app.route("/get_metrics", methods=["POST"])
+def get_metrics():
+    instance_id = request.form["instance_id"]
+    metrics = aws_manager.get_metrics_statistics(instance_id)
+    cpu_data = metrics[0]["Datapoints"]
+    networkin_data = metrics[1]["Datapoints"]
+    networkout_data = metrics[2]["Datapoints"]
+    print(cpu_data)
+    # flash(
+    #     {
+    #         "cpu_data": cpu_data,
+    #         "networkin_data": networkin_data,
+    #         "networkout_data": networkout_data,
+    #     }
+    # )
+    return jsonify(
+        {
+            "cpu_data": cpu_data,
+            "networkin_data": networkin_data,
+            "networkout_data": networkout_data,
+        }
+    )
 
 
 if __name__ == "__main__":
