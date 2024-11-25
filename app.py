@@ -97,13 +97,6 @@ def get_metrics():
     networkin_data = metrics[1]["Datapoints"]
     networkout_data = metrics[2]["Datapoints"]
     print(cpu_data)
-    # flash(
-    #     {
-    #         "cpu_data": cpu_data,
-    #         "networkin_data": networkin_data,
-    #         "networkout_data": networkout_data,
-    #     }
-    # )
     return jsonify(
         {
             "cpu_data": cpu_data,

@@ -18,15 +18,28 @@
         <div class="content">
             <div>
                 <h1><a href="/dashboard">Dashboard</a></h1>
+                <div class="option">
                     <select id="instanceOptions" name="instance_id" onchange="getMetrics()">
                         {% for instance in instances %}
                             <option value="{{ instance.id }}">{{ instance.id }} (NAME: {{ instance.name }} )</option>
                         {% endfor %}
                     </select>
-
-
+                </div>
                 <div class="chart-container">
-                    <canvas id="Graph" width="800" height="400"></canvas>
+                    <h4>CPU Utilization</h4>
+                    <canvas class="Graph" width="800" height="400"></canvas>
+                    <div class="legend">
+                        <span><span class="legend-color" style="background: #4e79a7;"></span>Average</span>
+                        <span><span class="legend-color" style="background: #f28e2c;"></span>Maximum</span>
+                    </div>
+                    <h4>Network Traffic In</h4>
+                    <canvas class="Graph" width="800" height="400"></canvas>
+                    <div class="legend">
+                        <span><span class="legend-color" style="background: #4e79a7;"></span>Average</span>
+                        <span><span class="legend-color" style="background: #f28e2c;"></span>Maximum</span>
+                    </div>
+                    <h4>Network Traffic Out</h4>
+                    <canvas class="Graph" width="800" height="400"></canvas>
                     <div class="legend">
                         <span><span class="legend-color" style="background: #4e79a7;"></span>Average</span>
                         <span><span class="legend-color" style="background: #f28e2c;"></span>Maximum</span>
@@ -44,43 +57,47 @@
 <script>
     let cpuData = [];
  
-    const canvas = document.getElementById('Graph');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.querySelectorAll('.Graph');
 
     /* 그래프 그리는 함수 */
-    function drawGraph(rawData) {
+    function drawGraph(rawData, canvas, ctx, unit) {
         console.log("rawData:", rawData);
 
         const padding = 60; // 그래프 여백 
         const leftRightPadding = 25; // 그래프 왼쪽 여백
         const chartWidth = canvas.width - (padding * 2); // 그래프 너비
         const chartHeight = canvas.height - (padding * 2); // 그래프 높이
- 
-        // 최대값 찾아서 Y축 최대 높이 계산
-        const maxValue = parseFloat(Math.max(...rawData.map(d => Math.max(d.Maximum, d.Average))));
+
+        // 최대값 찾아서 Y축 최대 높이 계산 (Bytes를 KB로 변환할 경우 처리)
+        const maxValue = unit === 'Bytes'
+            ? parseFloat(Math.max(...rawData.map(d => Math.max(d.Maximum, d.Average))) / (1000))
+            : parseFloat(Math.max(...rawData.map(d => Math.max(d.Maximum, d.Average))));
         const yScale = chartHeight / maxValue;
         console.log("maxValue:", maxValue);
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        
         /* 그래프 안에 그리드 그리는 함수 */
         function drawGrid() {
             const gridLines = 10; // 그리드 라인 수
             ctx.beginPath();
             ctx.strokeStyle = '#e0e0e0';
             ctx.lineWidth = 0.5;
- 
-            for(let i = 0; i <= gridLines; i++) {
+
+            for (let i = 0; i <= gridLines; i++) {
                 const y = padding + (chartHeight / gridLines) * i;
                 ctx.moveTo(padding, y);
                 ctx.lineTo(canvas.width - padding + 50, y);
-                
-                // Y축 값 표시
-                const value = parseFloat(((gridLines - i) * maxValue / gridLines)).toFixed(1);
+
+                // Y축 값 표시 (Bytes 단위는 KB로 변환)
+                const value = parseFloat(((gridLines - i) * maxValue / gridLines)).toFixed(2);
                 ctx.fillStyle = '#666';
                 ctx.textAlign = 'right';
-                ctx.fillText(value + '%', padding - 5, y + 4);
+
+                // 단위 표시 (KB 단위로 변경)
+                if (i === 0 || i === gridLines) {
+                    ctx.fillText(value + (unit === 'Bytes' ? ' KB' : ' %'), padding - 5, y + 4);
+                }
             }
             ctx.stroke();
         }
@@ -97,32 +114,31 @@
         ctx.moveTo(padding, canvas.height - padding);
         ctx.lineTo(canvas.width - padding + 50, canvas.height - padding); // 해당 값을 조정해 X축 조절
         ctx.stroke();
- 
-        
+
         /* 그래프 안에 선 그리는 함수 */
         function drawLine(data, field, color) {
             // 선 그리기
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.lineWidth = 2;
- 
+
             data.forEach((item, index) => {
                 const x = leftRightPadding + padding + (index * (chartWidth / (data.length > 1 ? (data.length - 1) : 1))); // 데이터가 하나인 경우에 대한 예외 처리 추가
-                const y = canvas.height - padding - (item[field] * yScale);
- 
+                const y = canvas.height - padding - ((unit === 'Bytes' ? item[field] / (1000) : item[field]) * yScale);
+
                 if (index === 0) {
                     ctx.moveTo(x, y);
                 } else {
                     ctx.lineTo(x, y);
                 }
             });
-            ctx.stroke();  // 라인 그리기
- 
+            ctx.stroke(); // 라인 그리기
+
             // 데이터 포인트 찍기
             data.forEach((item, index) => {
                 const x = leftRightPadding + padding + (index * (chartWidth / (data.length > 1 ? (data.length - 1) : 1))); // 데이터가 하나인 경우에 대한 예외 처리 추가
-                const y = canvas.height - padding - (item[field] * yScale);
- 
+                const y = canvas.height - padding - ((unit === 'Bytes' ? item[field] / (1000) : item[field]) * yScale);
+
                 // 포인트 그리기
                 ctx.beginPath();
                 ctx.arc(x, y, 4, 0, Math.PI * 2);
@@ -130,18 +146,22 @@
                 ctx.fill();
                 ctx.strokeStyle = color;
                 ctx.stroke();
- 
+
                 // 값 표시
                 ctx.fillStyle = '#000';
                 ctx.textAlign = 'center';
-                ctx.fillText(parseFloat(item[field]).toFixed(2) + '%', x, y - 10);
+                const valueToDisplay = (field === 'Average' || field === 'Maximum') && unit === 'Bytes'
+                    ? (item[field] / (1000)).toFixed(2) // Bytes를 KB로 변환 후 표시
+                    : parseFloat(item[field]).toFixed(2);
+
+                ctx.fillText(valueToDisplay + (unit === 'Bytes' ? ' KB' : ' %'), x, y - 10);
             });
         }
- 
+
         // Average와 Maximum 라인 그리기
         drawLine(rawData, 'Average', '#4e79a7');
         drawLine(rawData, 'Maximum', '#f28e2c');
- 
+
         // X축 날짜 레이블
         rawData.forEach((item, index) => {
             const x = leftRightPadding + padding + (index * (chartWidth / (rawData.length > 1 ? (rawData.length - 1) : 1)));
@@ -153,8 +173,7 @@
         });
     }
 
-
-    /* 메트릭 데이터 가져오는 함수(POST 요청) */
+    // 단위 설정과 그래프 호출
     function getMetrics() {
         const instanceId = document.getElementById("instanceOptions").value;
 
@@ -169,12 +188,23 @@
         })
         .then(response => response.json())
         .then(data => {
-            cpuData = data.cpu_data;
-            console.log("CPU Data:", cpuData);
-            // 그래프 그리는 함수 호출
-            drawGraph(cpuData);
+            const cpuData = data.cpu_data;
+            const networkinData = data.networkin_data;
+            const networkoutData = data.networkout_data;
+
+            const datas = [
+                { data: cpuData, unit: "%" },
+                { data: networkinData, unit: "Bytes" },
+                { data: networkoutData, unit: "Bytes" }
+            ];
+
+            for (let i = 0; i < canvas.length; i++) {
+                drawGraph(datas[i].data, canvas[i], canvas[i].getContext('2d'), datas[i].unit);
+            }
         })
         .catch(error => console.error("Error fetching metrics:", error));
     }
+
+    getMetrics();
  </script>
 </html>

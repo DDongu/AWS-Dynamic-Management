@@ -1,4 +1,10 @@
-#Graph {
+.option {
+    margin-top: 30px;
+    margin-right: 90px; /* 부모의 오른쪽 끝으로 이동 */
+    text-align: right; /* 텍스트 정렬도 오른쪽으로 */
+}
+.Graph {
+    padding: 0 50px;
     /* width: 800;
     height: 400; */
 }
@@ -9,12 +15,12 @@
 canvas {
     position: relative;
     border: 1px solid #ddd;
-    padding-right: 20px;
     right: 10px;
 }
 .legend {
     text-align: center;
     margin-top: 10px;
+    margin-bottom: 30px;
 }
 .legend span {
     display: inline-block;
