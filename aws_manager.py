@@ -142,7 +142,7 @@ class AwsManger:
     def get_metrics_statistics(self, instance_id):
         # 인스턴스 metric 데이터를 가져오는 함수
         end_time = datetime.utcnow()
-        start_time = end_time - timedelta(weeks=1)
+        start_time = end_time - timedelta(weeks=5)
 
         metrics = [
             {"MetricName": "CPUUtilization", "Statistics": ["Average", "Maximum"]},
