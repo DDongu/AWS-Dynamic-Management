@@ -59,6 +59,14 @@ def stop_instance():
     return redirect(url_for("instance"))
 
 
+@app.route("/terminate_instance", methods=["POST"])
+def terminate_instance():
+    instance_id = request.form["instance_id"]
+    message = aws_manager.terminate_instance(instance_id)
+    flash(message)
+    return redirect(url_for("instance"))
+
+
 @app.route("/reboot_instance", methods=["POST"])
 def reboot_instance():
     instance_id = request.form["instance_id"]

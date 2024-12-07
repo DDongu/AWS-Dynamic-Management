@@ -63,6 +63,10 @@
                             <input type="hidden" name="instance_id" value="{{ instance.id }}">
                             <button type="submit" class="btn reboot">Reboot</button>
                           </form>
+                          <form action="{{ url_for('terminate_instance') }}" method="POST" onsubmit="return confirmAction('terminate');">
+                            <input type="hidden" name="instance_id" value="{{ instance.id }}">
+                            <button type="submit" class="btn terminate">Terminate</button>
+                          </form>
                         </div>
                       </td>
                     </tr>
@@ -119,6 +123,9 @@
         break;
       case 'reboot':
         message = '인스턴스를 재부팅하시겠습니까?';
+        break;
+      case 'terminate':
+        message = '인스턴스를 종료(삭제)하시겠습니까?';
         break;
     }
     

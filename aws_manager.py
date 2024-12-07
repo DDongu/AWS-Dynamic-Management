@@ -69,12 +69,20 @@ class AwsManger:
             return f"Successfully started instance {instance_id}"
         except Exception as e:
             return f"Error: {e}"
-
+        
     def stop_instance(self, instance_id):
         # 특정 인스턴스를 중지하는 함수
         try:
             self.ec2.stop_instances(InstanceIds=[instance_id])
             return f"Successfully stopped instance {instance_id}"
+        except Exception as e:
+            return f"Error: {e}"
+        
+    def terminate_instance(self, instance_id):
+        # 특정 인스턴스를 종료(삭제)하는 함수
+        try:
+            response = self.ec2.terminate_instances(InstanceIds=[instance_id])
+            return f"Successfully terminated instance {instance_id}"
         except Exception as e:
             return f"Error: {e}"
 
