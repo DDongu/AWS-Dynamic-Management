@@ -33,7 +33,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Tag</th>
+                        <th>Name</th>
                         <th>Instance ID</th>
                         <th>Type</th>
                         <th>State</th>
@@ -71,7 +71,7 @@
                       </td>
                     </tr>
                     {% endfor %}
-                </tbody>
+                </tbody>  
             </table>
           </div>
         </div>
@@ -80,7 +80,8 @@
             <h5>Create New Instance</h5>
           </div>
           <div class="scrollable-table">
-            <form action="{{ url_for('create_instance') }}" method="POST" class="create-form">
+            <form action="{{ url_for('create_instance') }}" method="POST" class="create-form" onsubmit="return addInstanceName();">
+              <input type="hidden" name="instance_name" id="instanceName">
               <table>
                 <thead>
                   <tr>
@@ -131,6 +132,17 @@
     
     return confirm(message);
   }
+
+  function addInstanceName() {
+    const instanceName = prompt('생성할 인스턴스의 이름을 입력하세요:');
+    if (!instanceName) {
+      alert('인스턴스 이름을 입력해야 합니다.');
+      return false;
+    }
+    document.getElementById('instanceName').value = instanceName;
+    return true;
+  }
+
   const rows = document.querySelectorAll('.container-ami-list tr');
   rows.forEach(row => {
     row.addEventListener('click', function() {

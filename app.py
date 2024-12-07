@@ -78,7 +78,8 @@ def reboot_instance():
 @app.route("/create_instance", methods=["POST"])
 def create_instance():
     ami_id = request.form["ami_id"]
-    message = aws_manager.create_instance(ami_id)
+    instance_name = request.form["instance_name"]
+    message = aws_manager.create_instance(ami_id, instance_name)
     flash(message)
     return redirect(url_for("instance"))
 
@@ -113,6 +114,16 @@ def get_metrics():
         }
     )
 
+@app.route("/add_tags", methods=["POST"])
+def add_tags():
+    instance_id = request.form["instance_id"]
+    tag_key = request.form["tag_key"]
+    tag_value = request.form["tag_value"]
+    
+    tags = {tag_key: tag_value}  # 입력받은 태그 정보를 딕셔너리로 구성
+    message = aws_manager.add_tags(instance_id, tags)
+    flash(message)
+    return redirect(url_for("instance"))
 
 if __name__ == "__main__":
     app.run(debug=True)

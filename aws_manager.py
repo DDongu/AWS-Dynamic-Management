@@ -21,14 +21,28 @@ class AwsManger:
                         "type": instance["InstanceType"],
                         "state": instance["State"]["Name"],
                         "monitoringState": instance["Monitoring"]["State"],
-                        "name": (
-                            instance["Tags"][0]["Value"]
-                            if "Tags" in instance
-                            else "None"
-                        ),
+                        # "name": (
+                        #     instance["Tags"][0]["Value"] if "Tags" in instance else "None"
+                        # ),
+                                            "name": next(
+                        (tag["Value"] for tag in instance.get("Tags", []) if tag["Key"] == "Name"), 
+                        "None"),
+                        "private_ip": instance.get("PrivateIpAddress", "None"),
+                        "public_ip": instance.get("PublicIpAddress", "None"),
                     }
                     instances.append(instance_info)
             return instances
+        except Exception as e:
+            return f"Error: {e}"
+
+    def add_tags(self, resource_id, tags):
+        # 특정 리소스에 태그를 추가하는 함수
+        try:
+            self.ec2.create_tags(
+                Resources=[resource_id],
+                Tags=[{"Key": key, "Value": value} for key, value in tags.items()],
+            )
+            return f"Successfully added tags to resource {resource_id}"
         except Exception as e:
             return f"Error: {e}"
 
@@ -86,7 +100,7 @@ class AwsManger:
         except Exception as e:
             return f"Error: {e}"
 
-    def create_instance(self, ami_id):
+    def create_instance(self, ami_id, instance_name):
         # 특정 이미지의 인스턴스를 생성하는 함수
         try:
             response = self.ec2.run_instances(
@@ -98,9 +112,13 @@ class AwsManger:
                 SecurityGroups=["HTCondor"],
             )
             instance_id = response["Instances"][0]["InstanceId"]
-            return (
-                f"Successfully started EC2 instance {instance_id} based on AMI {ami_id}"
+            
+            # Name 태그 추가
+            self.ec2.create_tags(
+                Resources=[instance_id],
+                Tags=[{"Key": "Name", "Value": instance_name}]
             )
+            return f"Successfully started EC2 instance {instance_id} with name '{instance_name}' based on AMI {ami_id}"
         except Exception as e:
             return f"Error: {e}"
 
