@@ -2,7 +2,7 @@ import time
 from datetime import datetime, timedelta
 
 
-class AwsManger:
+class AwsManager:
     def __init__(self, ec2, ssm, cloudwatch):
         self.ec2 = ec2
         self.ssm = ssm

@@ -1,10 +1,10 @@
 import boto3
-from aws_manager import AwsManger
+from aws_manager import AwsManager
 
 ec2 = boto3.client("ec2")
 ssm = boto3.client("ssm")
 cloudwatch = boto3.client("cloudwatch")
-AwsManger = AwsManger(ec2, ssm, cloudwatch)
+AwsManager = AwsManager(ec2, ssm, cloudwatch)
 
 
 def menu():
@@ -23,37 +23,37 @@ def menu():
 
         number = input("Enter an integer: ")
         if number == "1":
-            result = AwsManger.list_instances()
+            result = AwsManager.list_instances()
         elif number == "2":
-            result = AwsManger.list_available_zones()
+            result = AwsManager.list_available_zones()
         elif number == "3":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                result = AwsManger.start_instance(instance_id)
+                result = AwsManager.start_instance(instance_id)
         elif number == "4":
-            result = AwsManger.list_available_regions()
+            result = AwsManager.list_available_regions()
         elif number == "5":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                result = AwsManger.stop_instance(instance_id)
+                result = AwsManager.stop_instance(instance_id)
         elif number == "6":
             ami_id = input("Enter ami id: ")
             if ami_id:
-                result = AwsManger.create_instance(ami_id)
+                result = AwsManager.create_instance(ami_id)
         elif number == "7":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                result = AwsManger.reboot_instance(instance_id)
+                result = AwsManager.reboot_instance(instance_id)
         elif number == "8":
-            result = AwsManger.list_images()
+            result = AwsManager.list_images()
         elif number == "9":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                result = AwsManger.condor_status(instance_id)
+                result = AwsManager.condor_status(instance_id)
         elif number == "10":
             instance_id = input("Enter instance id: ")
             if instance_id:
-                result = AwsManger.get_metrics_statistics(instance_id)
+                result = AwsManager.get_metrics_statistics(instance_id)
         elif number == "99":
             print("bye!")
             break

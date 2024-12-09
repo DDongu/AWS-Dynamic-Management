@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import boto3
 import secrets
-from aws_manager import AwsManger
+from aws_manager import AwsManager
 
 ec2 = boto3.client("ec2")
 ssm = boto3.client("ssm")
 cloudwatch = boto3.client("cloudwatch")
-aws_manager = AwsManger(ec2, ssm, cloudwatch)
+aws_manager = AwsManager(ec2, ssm, cloudwatch)
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(24)
